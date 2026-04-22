@@ -1,0 +1,66 @@
+[package]
+name = "antneuro"
+version = "0.0.1"
+edition = "2021"
+description = "Rust SDK and terminal UI for ANT Neuro eego EEG amplifiers"
+keywords = ["exg", "eeg", "ant-neuro", "eego", "bci"]
+authors = ["Eugene Hauptmann"]
+license = "MIT"
+
+# ── Library target ────────────────────────────────────────────────────────────
+
+[lib]
+name = "antneuro"
+path = "src/lib.rs"
+
+# ── Binary targets ────────────────────────────────────────────────────────────
+
+[[bin]]
+name = "antneuro"
+path = "src/main.rs"
+
+[[bin]]
+name = "tui"
+path = "src/bin/tui/main.rs"
+required-features = ["tui"]
+
+# ── Features ──────────────────────────────────────────────────────────────────
+
+[features]
+default = ["ffi", "native", "tui"]
+
+# Vendor SDK backend — wraps libeego-SDK.so / eego-SDK.dll via libloading.
+# Requires the vendor shared library at runtime.
+ffi = ["dep:libloading"]
+
+# Pure-Rust USB backend — communicates directly with the device via rusb.
+# No vendor library needed; works on Linux, macOS, and Windows.
+native = ["dep:rusb"]
+
+# Terminal UI with ratatui.
+tui = ["dep:ratatui", "dep:crossterm"]
+
+# Auto-download vendor SDK binaries from BrainFlow's GitHub repo at build time.
+# Runs scripts/download-sdk.sh (Linux/macOS) or scripts/download-sdk.ps1 (Windows).
+download-sdk = []
+
+# ── Dependencies ──────────────────────────────────────────────────────────────
+
+[dependencies]
+thiserror  = "2"
+tokio      = { version = "1", features = ["full"] }
+log        = "0.4"
+env_logger = "0.11"
+chrono     = "0.4"
+csv        = "1"
+anyhow     = "1"
+
+# Optional: FFI backend
+libloading = { version = "0.8", optional = true }
+
+# Optional: Native USB backend
+rusb = { version = "0.9.4", optional = true }
+
+# Optional: TUI
+ratatui   = { version = "0.30.0", features = ["crossterm"], optional = true }
+crossterm = { version = "0.29", optional = true }

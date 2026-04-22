@@ -1,0 +1,19 @@
+# Build artifacts
+/target/
+*.o
+*.so
+lib/*.so
+lib/*.dll
+
+# OS / IDE / tooling
+.DS_Store
+.claude/
+.vscode/
+.idea/
+*.swp
+
+# Java class files (Ghidra scripts compile these)
+*.class
+
+# Temporary
+/tmp/
